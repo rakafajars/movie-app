@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:movie_app/model/model_type.dart';
 import 'package:movie_app/screen/movie/list_movie_bloc/list_movie_bloc.dart';
 import 'package:movie_app/screen/movie/movie_bookmark_screen.dart';
@@ -7,6 +8,7 @@ import 'package:movie_app/screen/movie/movie_web_view.dart';
 import 'package:movie_app/screen/movie/person_popular_bloc/person_popular_bloc.dart';
 import 'package:movie_app/screen/movie/search_movie_screen.dart';
 import 'package:movie_app/screen/movie/widget/list_movie_widget.dart';
+import 'package:movie_app/service/service_remote/moe_service.dart';
 
 class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});
@@ -74,6 +76,25 @@ class _MovieScreenState extends State<MovieScreen> {
                 );
               },
               icon: const Icon(Icons.web),
+            ),
+            IconButton(
+              onPressed: () async {
+                XFile? xFile;
+                final ImagePicker picker = ImagePicker();
+
+                xFile = await picker.pickImage(
+                  source: ImageSource.gallery,
+                );
+
+                if (xFile != null) {
+                  await MoeService().getMoe(
+                    xfile: xFile,
+                  );
+                }
+              },
+              icon: const Icon(
+                Icons.image,
+              ),
             ),
           ],
           bottom: TabBar(
