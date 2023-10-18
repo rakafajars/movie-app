@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/screen/movie/detail_movie_bloc/detail_movie_bloc.dart';
+import 'package:movie_app/screen/movie/movie_recommendation_screen.dart';
 
 class DetailMovieInitScreen extends StatelessWidget {
   final String idMovie;
@@ -13,13 +14,16 @@ class DetailMovieInitScreen extends StatelessWidget {
         ..add(
           GetDetailMovieEvent(idMovie: idMovie),
         ),
-      child: const DetailMovieScreen(),
+      child: DetailMovieScreen(
+        idMovie: idMovie,
+      ),
     );
   }
 }
 
 class DetailMovieScreen extends StatelessWidget {
-  const DetailMovieScreen({super.key});
+  final String idMovie;
+  const DetailMovieScreen({super.key, required this.idMovie});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,7 @@ class DetailMovieScreen extends StatelessWidget {
             );
           } else if (state is DetailMovieLoaded) {
             return SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 64),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,6 +62,9 @@ class DetailMovieScreen extends StatelessWidget {
                   Text(state.dataMovieModel.originalTitle ?? "-"),
                   const SizedBox(height: 24),
                   Text(state.dataMovieModel.overview ?? "-"),
+                  MovieRecommendationInit(
+                    idMovie: idMovie,
+                  ),
                 ],
               ),
             );

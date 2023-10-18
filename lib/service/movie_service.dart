@@ -79,4 +79,22 @@ class MovieService {
       throw '$e';
     }
   }
+
+  Future<MovieModel> getMovieRecommendation({required String idMovie}) async {
+    try {
+      final response = await Dio().get(
+        'https://api.themoviedb.org/3/movie/$idMovie/recommendations',
+        options: Options(
+          headers: {
+            "Authorization":
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYjBkZWJlMDUzNTM1NGZkNDViM2I4NmE4MWZkMzVhMiIsInN1YiI6IjVlNjk5ZGU4Y2VkYWM0MDAxNTQ2YmMyYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.X6XeWeTtRu1bibtfYujUyi_m0bdVmwK8bFastHyZVfk",
+          },
+        ),
+      );
+
+      return MovieModel.fromJson(response.data);
+    } catch (e) {
+      throw '$e';
+    }
+  }
 }
