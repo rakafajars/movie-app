@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/model/person_popular_model.dart';
-import 'package:movie_app/service/movie_service.dart';
+import 'package:movie_app/service/service_remote/movie_service.dart';
 
 part 'person_popular_event.dart';
 part 'person_popular_state.dart';

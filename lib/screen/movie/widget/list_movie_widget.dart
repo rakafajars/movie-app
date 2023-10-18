@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/model/data_movie_model.dart';
+import 'package:movie_app/model/movie_lokal_model.dart';
 import 'package:movie_app/screen/movie/detail_movie_screen.dart';
 
 class ListMoviewWidget extends StatelessWidget {
@@ -18,6 +19,12 @@ class ListMoviewWidget extends StatelessWidget {
             MaterialPageRoute(
               builder: (_) => DetailMovieInitScreen(
                 idMovie: movieData?.id.toString() ?? "",
+                movieLokalModel: MovieLokalModel(
+                  id: movieData?.id,
+                  title: movieData?.originalTitle,
+                  posterPath: movieData?.posterPath,
+                  overview: movieData?.overview,
+                ),
               ),
             ),
           ),

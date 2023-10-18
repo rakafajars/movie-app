@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/model/data_movie_model.dart';
-import 'package:movie_app/service/movie_service.dart';
+import 'package:movie_app/service/service_remote/movie_service.dart';
 
 part 'detail_movie_event.dart';
 part 'detail_movie_state.dart';

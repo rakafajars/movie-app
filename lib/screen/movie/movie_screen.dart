@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/model/model_type.dart';
 import 'package:movie_app/screen/movie/list_movie_bloc/list_movie_bloc.dart';
+import 'package:movie_app/screen/movie/movie_bookmark_screen.dart';
 import 'package:movie_app/screen/movie/person_popular_bloc/person_popular_bloc.dart';
 import 'package:movie_app/screen/movie/search_movie_screen.dart';
 import 'package:movie_app/screen/movie/widget/list_movie_widget.dart';
@@ -50,6 +51,17 @@ class _MovieScreenState extends State<MovieScreen> {
                 );
               },
               icon: const Icon(Icons.search),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const MovieBookScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.save),
             ),
           ],
           bottom: TabBar(

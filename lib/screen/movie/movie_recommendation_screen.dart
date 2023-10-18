@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/model/movie_lokal_model.dart';
 import 'package:movie_app/screen/movie/detail_movie_screen.dart';
 import 'package:movie_app/screen/movie/movie_recommendation/movie_recommendation_bloc.dart';
 
@@ -58,11 +59,17 @@ class MovieRecommendationScreen extends StatelessWidget {
                     final movieData = state.movieModel.results?[index];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => DetailMovieInitScreen(
                               idMovie: movieData?.id.toString() ?? "",
+                              movieLokalModel: MovieLokalModel(
+                                id: movieData?.id,
+                                title: movieData?.originalTitle,
+                                posterPath: movieData?.posterPath,
+                                overview: movieData?.overview,
+                              ),
                             ),
                           ),
                         );
