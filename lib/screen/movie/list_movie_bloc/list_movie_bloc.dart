@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/model/data_movie_model.dart';
 import 'package:movie_app/model/movie_model.dart';
 import 'package:movie_app/service/service_remote/movie_service.dart';
 
@@ -15,6 +16,7 @@ class ListMovieBloc extends Bloc<ListMovieEvent, ListMovieState> {
 
           final movie = await MovieService().getMovieListByParameter(
             typeMovie: event.idTitle,
+            page: event.page,
           );
 
           if (movie.results?.isNotEmpty == true) {
@@ -25,6 +27,42 @@ class ListMovieBloc extends Bloc<ListMovieEvent, ListMovieState> {
             );
           } else {
             emit(ListMovieEmpty());
+          }
+        } catch (e) {
+          emit(
+            const ListMovieError(
+              messageError: "Terjadi Kesalahan",
+            ),
+          );
+        }
+      },
+    );
+
+    on<GetPaginationListMovieEvent>(
+      (event, emit) async {
+        try {
+          final currentState = state;
+
+          if (currentState is ListMovieLoaded) {
+            final List<DataMovieModel>? currentMovies =
+                currentState.movie.results;
+
+            final movie = await MovieService().getMovieListByParameter(
+              typeMovie: event.idTitle,
+              page: event.page,
+            );
+            if (movie.results?.isNotEmpty == true) {
+              movie.results?.forEach((element) {
+                currentMovies?.add(element);
+              });
+              emit(
+                ListMovieLoaded(
+                  movie: MovieModel(
+                    results: currentMovies,
+                  ),
+                ),
+              );
+            }
           }
         } catch (e) {
           emit(
