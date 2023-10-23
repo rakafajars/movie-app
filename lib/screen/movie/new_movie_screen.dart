@@ -23,8 +23,22 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
     BlocProvider.of<ListMovieBloc>(context).add(
       const GetListMovieEvent(
         idTitle: "now_playing",
+        page: 1,
       ),
     );
+
+    _scrollContoller.addListener(() {
+      if (_scrollContoller.position.atEdge) {
+        bool isTop = _scrollContoller.position.pixels == 0;
+
+        if (isTop) {
+          print('ada di atas');
+        } else {
+          nextPage();
+          print('ada di bawah');
+        }
+      }
+    });
     super.initState();
   }
 
@@ -51,6 +65,21 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
   void pauseAudio() async {
     await audioPlayer.pause();
     _isAudioPlay = false;
+    setState(() {});
+  }
+
+  int currentPage = 1;
+
+  final _scrollContoller = ScrollController();
+
+  void nextPage() {
+    currentPage = currentPage + 1;
+    context.read<ListMovieBloc>().add(
+          GetPaginationListMovieEvent(
+            idTitle: "now_playing",
+            page: currentPage,
+          ),
+        );
     setState(() {});
   }
 
@@ -133,54 +162,88 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (state is ListMovieLoaded) {
-            return ListView.builder(
-              itemCount: state.movie.results?.length,
-              itemBuilder: (context, int index) {
-                var movieData = state.movie.results?[index];
-                return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => DetailMovieInitScreen(
-                        idMovie: movieData?.id.toString() ?? "",
-                        movieLokalModel: MovieLokalModel(
-                          id: movieData?.id,
-                          title: movieData?.originalTitle,
-                          posterPath: movieData?.posterPath,
-                          overview: movieData?.overview,
-                        ),
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<ListMovieBloc>().add(
+                      const GetListMovieEvent(
+                        idTitle: "now_playing",
+                        page: 1,
                       ),
-                    ),
-                  ),
-                  child: Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Stack(
-                          alignment: AlignmentDirectional.topEnd,
-                          children: [
-                            Image.network(
-                                "https://image.tmdb.org/t/p/w500${movieData?.posterPath}"),
-                            Container(
-                              padding: const EdgeInsets.all(18),
-                              margin: const EdgeInsets.only(top: 16, right: 16),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text("${movieData?.voteAverage}"),
-                            ),
-                          ],
-                        ),
-                        Text(movieData?.originalTitle ?? "-"),
-                        const SizedBox(height: 24),
-                        Text(movieData?.overview ?? "-"),
-                      ],
-                    ),
-                  ),
-                );
+                    );
               },
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollContoller,
+                      shrinkWrap: true,
+                      itemCount: state.movie.results?.length,
+                      itemBuilder: (context, int index) {
+                        var movieData = state.movie.results?[index];
+                        return GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DetailMovieInitScreen(
+                                idMovie: movieData?.id.toString() ?? "",
+                                movieLokalModel: MovieLokalModel(
+                                  id: movieData?.id,
+                                  title: movieData?.originalTitle,
+                                  posterPath: movieData?.posterPath,
+                                  overview: movieData?.overview,
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  children: [
+                                    Image.network(
+                                        "https://image.tmdb.org/t/p/w500${movieData?.posterPath}"),
+                                    Container(
+                                      padding: const EdgeInsets.all(18),
+                                      margin: const EdgeInsets.only(
+                                          top: 16, right: 16),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text("${movieData?.voteAverage}"),
+                                    ),
+                                  ],
+                                ),
+                                Text(movieData?.originalTitle ?? "-"),
+                                const SizedBox(height: 24),
+                                Text(movieData?.overview ?? "-"),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      currentPage = currentPage + 1;
+                      context.read<ListMovieBloc>().add(
+                            GetPaginationListMovieEvent(
+                              idTitle: "now_playing",
+                              page: currentPage,
+                            ),
+                          );
+                      setState(() {});
+                    },
+                    child: const Text(
+                      'Read More..',
+                    ),
+                  )
+                ],
+              ),
             );
           } else if (state is ListMovieEmpty) {
             return const Center(

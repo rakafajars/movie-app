@@ -29,9 +29,7 @@ class _MovieScreenState extends State<MovieScreen> {
   @override
   void initState() {
     BlocProvider.of<ListMovieBloc>(context).add(
-      GetListMovieEvent(
-        idTitle: typeMovieList[0].idTitle,
-      ),
+      GetListMovieEvent(idTitle: typeMovieList[0].idTitle, page: 1),
     );
     super.initState();
   }
@@ -103,8 +101,7 @@ class _MovieScreenState extends State<MovieScreen> {
                 context.read<PersonPopularBloc>().add(GetPersonPopularEvent());
               } else {
                 context.read<ListMovieBloc>().add(GetListMovieEvent(
-                      idTitle: typeMovieList[val].idTitle,
-                    ));
+                    idTitle: typeMovieList[val].idTitle, page: 1));
               }
             },
             isScrollable: true,

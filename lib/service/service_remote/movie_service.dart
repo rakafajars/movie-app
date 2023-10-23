@@ -6,10 +6,11 @@ import 'package:movie_app/model/person_popular_model.dart';
 class MovieService {
   Future<MovieModel> getMovieListByParameter({
     required String typeMovie,
+    required int page,
   }) async {
     try {
       final response = await Dio().get(
-        'https://api.themoviedb.org/3/movie/$typeMovie?language=en-US&page=1',
+        'https://api.themoviedb.org/3/movie/$typeMovie?language=en-US&page=$page',
         options: Options(
           headers: {
             "Authorization":
@@ -17,6 +18,8 @@ class MovieService {
           },
         ),
       );
+
+      print(response.requestOptions.path);
 
       return MovieModel.fromJson(response.data);
     } catch (e) {

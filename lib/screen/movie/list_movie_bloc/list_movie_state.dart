@@ -30,3 +30,9 @@ final class ListMovieError extends ListMovieState {
   @override
   List<Object?> get props => [messageError];
 }
+
+final class ListMoviePaginationError extends ListMovieState {
+  const ListMoviePaginationError();
+  @override
+  List<Object?> get props => [];
+}
