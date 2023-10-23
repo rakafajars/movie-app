@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,32 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
       ),
     );
     super.initState();
+  }
+
+  List<String> audio = [
+    "https://equran.nos.wjv-1.neo.id/audio-full/Abdullah-Al-Juhany/001.mp3",
+    "https://equran.nos.wjv-1.neo.id/audio-full/Abdullah-Al-Juhany/001.mp3",
+    "https://equran.nos.wjv-1.neo.id/audio-full/Abdullah-Al-Juhany/001.mp3"
+  ];
+
+  final audioPlayer = AudioPlayer();
+
+  bool _isAudioPlay = false;
+
+  void playAudio() async {
+    await audioPlayer.play(
+      UrlSource(
+        'https://equran.nos.wjv-1.neo.id/audio-full/Abdullah-Al-Juhany/001.mp3',
+      ),
+    );
+    _isAudioPlay = true;
+    setState(() {});
+  }
+
+  void pauseAudio() async {
+    await audioPlayer.pause();
+    _isAudioPlay = false;
+    setState(() {});
   }
 
   @override
@@ -85,6 +112,18 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
               Icons.image,
             ),
           ),
+          IconButton(
+            onPressed: () {
+              if (_isAudioPlay == true) {
+                pauseAudio();
+              } else {
+                playAudio();
+              }
+            },
+            icon: Icon(
+              _isAudioPlay ? Icons.pause : Icons.play_arrow,
+            ),
+          )
         ],
       ),
       body: BlocBuilder<ListMovieBloc, ListMovieState>(
