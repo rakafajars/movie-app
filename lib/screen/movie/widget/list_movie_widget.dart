@@ -5,11 +5,13 @@ import 'package:movie_app/screen/movie/detail_movie_screen.dart';
 
 class ListMoviewWidget extends StatelessWidget {
   final List<DataMovieModel>? results;
-  const ListMoviewWidget({super.key, this.results});
+  final ScrollController? controller;
+  const ListMoviewWidget({super.key, this.results, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      controller: controller,
       itemCount: results?.length,
       itemBuilder: (context, int index) {
         var movieData = results?[index];

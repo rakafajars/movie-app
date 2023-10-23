@@ -34,10 +34,39 @@ class _MovieScreenState extends State<MovieScreen> {
         page: _currentPage,
       ),
     );
+
+    // Setup the listener.
+    _controller.addListener(() {
+      if (_controller.position.atEdge) {
+        bool isTop = _controller.position.pixels == 0;
+        if (isTop) {
+          print('At the top');
+        } else {
+          print('At the bottom');
+          paginationApi();
+        }
+      }
+    });
+
     super.initState();
   }
 
   int _currentPage = 1;
+
+  final _controller = ScrollController();
+
+  void paginationApi() {
+    _currentPage = _currentPage + 1;
+
+    context.read<ListMovieBloc>().add(
+          GetPaginationListMovieEvent(
+            idTitle: typeMovieList[0].idTitle,
+            page: _currentPage,
+          ),
+        );
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,21 +163,24 @@ class _MovieScreenState extends State<MovieScreen> {
                       Expanded(
                         child: ListMoviewWidget(
                           results: state.movie.results,
+                          controller: _controller,
                         ),
                       ),
                       SafeArea(
                         child: ElevatedButton(
                           onPressed: () {
-                            _currentPage = _currentPage + 1;
+                            // _currentPage = _currentPage + 1;
 
-                            context.read<ListMovieBloc>().add(
-                                  GetPaginationListMovieEvent(
-                                    idTitle: typeMovieList[0].idTitle,
-                                    page: _currentPage,
-                                  ),
-                                );
+                            // context.read<ListMovieBloc>().add(
+                            //       GetPaginationListMovieEvent(
+                            //         idTitle: typeMovieList[0].idTitle,
+                            //         page: _currentPage,
+                            //       ),
+                            //     );
 
-                            setState(() {});
+                            // setState(() {});
+
+                            paginationApi();
                           },
                           child: const Text(
                             "Read More",
