@@ -10,7 +10,7 @@ class ListMoviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: results?.length,
+      itemCount: results?.sublist(0, 2).length,
       itemBuilder: (context, int index) {
         var movieData = results?[index];
         return GestureDetector(

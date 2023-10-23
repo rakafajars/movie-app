@@ -4,6 +4,7 @@ import 'package:movie_app/model/movie_lokal_model.dart';
 import 'package:movie_app/screen/movie/detail_movie_bloc/detail_movie_bloc.dart';
 import 'package:movie_app/screen/movie/movie_recommendation_screen.dart';
 import 'package:movie_app/service/service_local/db_helper.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class DetailMovieInitScreen extends StatelessWidget {
   final String idMovie;
@@ -53,6 +54,16 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
     getMovieById(int.parse(widget.idMovie));
     super.initState();
   }
+
+  final _youtubeController = YoutubePlayerController.fromVideoId(
+    videoId: '8OgcHAv6Jvk',
+    autoPlay: true,
+    params: const YoutubePlayerParams(
+      loop: true,
+      showFullscreenButton: true,
+      showControls: true,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +127,14 @@ class _DetailMovieScreenState extends State<DetailMovieScreen> {
                   Text(state.dataMovieModel.overview ?? "-"),
                   MovieRecommendationInit(
                     idMovie: widget.idMovie,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 300,
+                    color: Colors.red,
+                    child: YoutubePlayer(
+                      controller: _youtubeController,
+                    ),
                   ),
                 ],
               ),
