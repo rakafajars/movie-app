@@ -25,6 +25,7 @@ class MoeService {
         ),
       );
 
+      print(response.data);
       return MoeModel.fromJson(response.data);
     } catch (e) {
       throw "$e";
