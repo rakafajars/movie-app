@@ -18,9 +18,12 @@ class NewMovieScreen extends StatefulWidget {
 }
 
 class _NewMovieScreenState extends State<NewMovieScreen> {
+  late ListMovieBloc listMovieBloc;
+
   @override
   void initState() {
-    BlocProvider.of<ListMovieBloc>(context).add(
+    listMovieBloc = BlocProvider.of<ListMovieBloc>(context);
+    listMovieBloc.add(
       const GetListMovieEvent(
         idTitle: "now_playing",
         page: 1,
@@ -74,13 +77,20 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
 
   void nextPage() {
     currentPage = currentPage + 1;
-    context.read<ListMovieBloc>().add(
-          GetPaginationListMovieEvent(
-            idTitle: "now_playing",
-            page: currentPage,
-          ),
-        );
+    listMovieBloc.add(
+      GetPaginationListMovieEvent(
+        idTitle: "now_playing",
+        page: currentPage,
+      ),
+    );
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _scrollContoller.dispose();
+    listMovieBloc.isClosed;
+    super.dispose();
   }
 
   @override
@@ -164,12 +174,12 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
           } else if (state is ListMovieLoaded) {
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<ListMovieBloc>().add(
-                      const GetListMovieEvent(
-                        idTitle: "now_playing",
-                        page: 1,
-                      ),
-                    );
+                listMovieBloc.add(
+                  const GetListMovieEvent(
+                    idTitle: "now_playing",
+                    page: 1,
+                  ),
+                );
               },
               child: Column(
                 children: [
@@ -230,12 +240,12 @@ class _NewMovieScreenState extends State<NewMovieScreen> {
                   ElevatedButton(
                     onPressed: () {
                       currentPage = currentPage + 1;
-                      context.read<ListMovieBloc>().add(
-                            GetPaginationListMovieEvent(
-                              idTitle: "now_playing",
-                              page: currentPage,
-                            ),
-                          );
+                      listMovieBloc.add(
+                        GetPaginationListMovieEvent(
+                          idTitle: "now_playing",
+                          page: currentPage,
+                        ),
+                      );
                       setState(() {});
                     },
                     child: const Text(
